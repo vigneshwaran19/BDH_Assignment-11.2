@@ -1,0 +1,199 @@
+
+2021-05-26T08:04:29.986Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:04:45.071Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:05:00.177Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:05:15.360Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:05:30.435Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:05:45.510Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:06:00.569Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:06:15.721Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:06:30.879Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:06:45.987Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+2021-05-26T08:07:01.059Z - Warning: Cannot connect to IP 158.196.74.59, will try again
+
+
+
+https://systeminsights.jira.com/browse/SUPPORT-10957
+https://systeminsights.jira.com/browse/SUPPORT-11159
+
+
+    Classifier
+        classifyAs Producing while
+            [((EXECUTION(execution) = "ACTIVE" withAllowance for 10 seconds AND PATH_FEEDRATE(path_feedrate) != 0 withAllowance for 10 seconds) OR (EXECUTION(execution2) = "ACTIVE" withAllowance for 10 seconds OR PATH_FEEDRATE(path_feedrate2) != 0 withAllowance for 10 seconds))]
+		        classifyAs BarChange while
+		        	[BLOCK(block) = "/M98P7000"]
+        classifyAs PartAlignment while
+            [(SPINDLE_SPEED(S1speed) = 0 withAllowance for 10 seconds AND TOOL_ID(tool_id) = "99999999" withAllowance for 10 seconds)]        
+        classifyAs Producing when
+    	    any classification occurs for utmost 30 seconds between Producing and Producing
+        classifyAs PartAlignment when
+    	    any classification occurs for utmost 30 seconds between PartAlignment and PartAlignment 
+        classifyFromUserEvent
+        classifyAs MachineToolFailure while
+            [fault]
+        classifyFromSchedule
+        classifyAs DataUnavailable while
+            [AVAILABILITY != "AVAILABLE"]
+
+ Device ditchwitch_68
+	Classifier
+		classifyAs Producing while
+			[(Event(In_Cycle) = "1" withAllowance for 10 seconds AND signal(Green1) = "1" withAllowance for 10 seconds AND Signal(Amber1) = "1" withAllowance for 10 seconds AND Signal(Red1) = "0" withAllowance for 10 seconds)]
+		classifyAs Producing while
+			[(Event(In_Cycle) = "1" withAllowance for 10 seconds AND Signal(Green2) = "1" withAllowance for 10 seconds AND Signal(Amber2) = "1" withAllowance for 10 seconds AND Signal(Red2) = "0" withAllowance for 10 seconds)]
+		classifyFromSchedule
+		classifyFromUserEvent
+		classifyAs MachineToolFailure while
+			[fault]
+
+
+
+ Device ditchwitch_68
+	Classifier
+		classifyAs Producing while
+			[(Signal(Green1) = "1" withAllowance for 10 seconds AND Signal(Amber1) = "1" withAllowance for 10 seconds)]
+		classifyAs Producing while
+			[(Signal(Green2) = "1" withAllowance for 10 seconds AND Signal(Amber2) = "1" withAllowance for 10 seconds)]
+		classifyFromSchedule
+		classifyFromUserEvent
+		classifyAs MachineToolFailure while
+			[fault]
+
+
+
+Device ditchwitch_68
+	Classifier
+		classifyAs Producing while
+			[(Signal(Green1) = "1" withAllowance for 10 seconds AND Signal(Amber1) = "1" withAllowance for 10 seconds)]
+		classifyAs Producing while
+			[(Signal(Green2) = "1" withAllowance for 10 seconds AND Signal(Amber2) = "1" withAllowance for 10 seconds)]
+		classifyFromSchedule
+		classifyFromUserEvent
+		classifyAs MachineToolFailure while
+			[fault]
+
+
+Devices parveenindustries_DOOSANDNM400_acc5b0, parveenindustries_HASS4_0a5c71, parveenindustries_PINACHO3_2e9264
+    Classifier
+    	classifyAs Producing while
+    	    [(EXECUTION(execution) = "ACTIVE" AND ((PATH_FEEDRATE_OVERRIDE(Fovr) > 40 withAllowance for 15 seconds) OR (PATH_FEEDRATE_OVERRIDE(Fovr1) > 40 withAllowance for 15 seconds)) AND ROTARY_VELOCITY(S1speed) > 0 withAllowance for 15 seconds)]
+    	classifyAs LowFeedrate while
+    	    [(EXECUTION(execution) = "ACTIVE" AND CONTROLLER_MODE(mode) = "AUTOMATIC" AND ((PATH_FEEDRATE_OVERRIDE(Fovr) < 70 withAllowance for 10 seconds) AND (PATH_FEEDRATE_OVERRIDE(Fovr1) < 70 withAllowance for 10 seconds)) AND ROTARY_VELOCITY(S1speed) > 0 withAllowance for 10 seconds)]
+	    classifyFromUserEvent
+	    classifyAs MachineToolFailure while
+	    	[fault]
+            classifyFromSchedule
+	    classifyAs Shutdown while
+	        [AVAILABILITY != "AVAILABLE"]
+
+
+Devices adec_A51NX_7595_4b7c48, adec_A51_7365_57a98e, adec_A55_6980_1831a9, adec_A81_1430_43207d, adec_A81_1439_5a298c, adec_A81_7412_6d3798, adec_A81_7758_f629bd, adec_A51NX_7719_ba2c67, adec_A81_7758_test_ca7e2f
+    Classifier
+    	classifyAs Producing while
+    	    [(EXECUTION(execution) = "ACTIVE" OR PATH_FEEDRATE(path_feedrate) > 0 OR PATH_FEEDRATE(path_feedrate2) > 0)]
+    	classifyAs Producing while
+    	    [(EXECUTION(execution) = "ACTIVE" OR (PATH_FEEDRATE(path_feedrate) > 0 OR PATH_FEEDRATE(path_feedrate2) > 0) withAllowance for 10 seconds)]
+	    classifyAs Producing when
+    	    any classification occurs for utmost 2 seconds between Producing and Producing
+    	classifyAs PartHandling while
+    		[CurrentClassification is Producing withAllowance for 2 minutes]
+            classifyFromSchedule
+	    classifyFromUserEvent    
+	    classifyAs DataUnavailable while
+	        [AVAILABILITY != "AVAILABLE"]
+
+
+	    classifyAs PartHandling while
+    		[CurrentClassification is Producing withAllowance for 2 minutes]
+    	classifyAs PartHandling2 while
+    		[CurrentClassification is PartHandling withAllownace for 3 minutes]
+
+
+
+
+https://systeminsights.jira.com/browse/SUPPORT-11445 - Response posted in ticket
+
+Medição
+Reunião Operacional
+
+
+https://systeminsights.jira.com/browse/SUPPORT-11332
+https://systeminsights.jira.com/browse/SUPPORT-11282 
+https://systeminsights.jira.com/browse/SUPPORT-11074 
+https://systeminsights.jira.com/browse/SUPPORT-11367
+https://systeminsights.jira.com/browse/SUPPORT-11318
+
+https://app.vimana.us/#/reports/device-details-3-maintenance?period=2021-05-24T10%3A00%3A00.000Z%2F2021-06-04T10%3A00%3A00.000Z&device=enjetamg_EAAM-A71_24894d
+
+
+
+
+
+
+Planned Downtime: Operator Break
+ Classification Operator Break occurs weekly on Monday, Tuesday, Wednesday, Friday, Thursday, Saturday between 09:00 and 09:10.
+
+Planned Downtime: Operator Break
+ Classification occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 11:40 and 12:30.
+
+Planned Downtime: Operator Break
+ Classification Operator Break occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 14:25 and 14:35.
+
+Planned Downtime: Operator Break
+ Classification Operator Break occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 19:30 and 19:40.
+
+Planned Downtime: Operator Break
+ Classification Operator Break occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 21:55 and 22:45.
+
+Planned Downtime: Operator Break
+ Classification Operator Break occurs weekly on Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday between 01:00 and 01:10.
+
+
+
+
+Shift Shift 1 occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 06:00 and 16:30.
+
+Shift Shift 2 occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 16:30 and 02:30.
+
+Shift No Operator Planned occurs weekly on Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday between 02:30 and 06:00.
+
+Planned Downtime: No Operator Planned
+ Classification occurs weekly on Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday between 02:30 and 06:00.
+
+Standby
+ Classification occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 06:00 and 16:30.
+
+Standby
+ Classification occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 16:30 and 02:30.
+
+Planned Downtime: Lunch/Break
+ Classification occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 09:00 and 09:10.
+
+Planned Downtime: Lunch/Break
+ Classification occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 11:45 and 12:30.
+
+Planned Downtime: Lunch/Break
+ Classification occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 14:30 and 14:40.
+
+Planned Downtime: Lunch/Break
+ Classification occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 18:00 and 18:10.
+
+Planned Downtime: Lunch/Break
+ Classification occurs weekly on Monday, Tuesday, Wednesday, Thursday, Friday, Saturday between 21:00 and 21:45.
+
+Planned Downtime: Lunch/Break
+ Classification occurs weekly on Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday between 01:00 and 01:10.
+
+Shift Shutdown occurs weekly on Sunday between 06:00 and 06:00.
+
+Shutdown
+ Classification occurs weekly on Sunday between 06:00 and 06:00.
+
+
+
+
+
+
+
+
+ eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJ2aW1hbmEudXMiLCJhdWQiOlsidmltYW5hLnVzIl0sImV4cCI6MTYyNDg1MjAwNzk0MCwic3ViIjoidmlnbmVzaHdhcmFuIiwidG50Ijoic3lzdGVtaW5zaWdodHMiLCJwcm0iOlsicGxhbnRzOmFjY2VzczpzeXN0ZW1pbnNpZ2h0cyIsInBlcm1pc3Npb25zOnJlYWQ6cHVibGljIiwicGVybWlzc2lvbnM6Z3JhbnQ6cHVibGljIiwicm9sZXM6cmVhZCIsInVzZXJzOnJlYWQiLCJ1c2VyczpjcmVhdGUiLCJ1c2Vyczp1cGRhdGUiLCJwbGFudHM6cmVhZCIsInN0YXRlX2FjdGl2aXRpZXM6cmVhZCIsInN0YXRlX2FjdGl2aXRpZXM6dXBkYXRlIiwiZGV2aWNlOnJlYWQiLCJkZXZpY2U6dXBkYXRlIiwiYWxlcnQ6YWRtaW4iLCJhbGVydDp1c2UiLCJjb21tZW50OnJlYWQiLCJjb21tZW50OmNyZWF0ZSIsImNhbGVuZGFyOnZpZXciLCJjYWxlbmRhcjplZGl0IiwiZGFzaGJvYXJkczp2aWV3IiwiZGFzaGJvYXJkczplZGl0Iiwib3BlcmF0b3JzOnZpZXciLCJvcGVyYXRvcnM6ZWRpdCIsInJlcG9ydHM6dmlldyIsInJlcG9ydHM6ZWRpdCIsInJlcG9ydHM6cmVhZCIsInRpY2tldGluZzphZG1pbiIsInRpY2tldGluZzp1c2UiLCJ0YXJnZXQ6Y3JlYXRlIiwidGFyZ2V0OnJlYWQiLCJ0YXJnZXQ6dXBkYXRlIiwidGFyZ2V0OmRlbGV0ZSIsImtub3dsZWRnZWJhc2U6dmlldyIsImtub3dsZWRnZWJhc2U6Y3JlYXRlIiwia25vd2xlZGdlYmFzZTplZGl0IiwibWVkaWE6dmlldyIsIm1lZGlhOmNyZWF0ZSIsIm1lZGlhOmVkaXQiLCJtYWludGFpbjpwbGFuOioiLCJtYWludGFpbjphY3Rpdml0eToqIiwibWFpbnRhaW46cHJlZGljdCIsInBsYW50czphY2Nlc3M6KiIsInRlbmFudHM6cmVhZCIsImNvbm5lY3Q6Y29tcG9uZW50czp2aWV3IiwiY29ubmVjdDpjb21wb25lbnRzOmVkaXQiLCJjb25uZWN0OmxpY2Vuc2luZzp2aWV3IiwiY29ubmVjdDpsaWNlbnNpbmc6ZWRpdCIsInJ1bGVzOmFkbWluIl19.obZH6ujrNHEnkg2mSc1kYFm-ZQEeIk0T15ucn7KxNcw
